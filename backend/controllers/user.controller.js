@@ -46,5 +46,21 @@ export async function loginUser(req, res) {
     return res.status(401).json({ message: 'Invalid email or password' });
   }
   const token = user.generateAuthToken();
+  res.cookie('token', token)
   return res.status(200).json({ user, token });
 }    
+
+
+export async function getUserProfile(req, res) {
+  res.json({ user: req.user });
+}
+
+
+export async function logoutUser(req, res) {
+  res.clearCookie('token');
+  return res.status(200).json({ message: 'Logged out successfully' });
+}
+
+
+
+

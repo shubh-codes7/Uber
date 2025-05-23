@@ -61,7 +61,9 @@ POST /users/register
   "token": "..."
 }
 ```
+
 ---
+
 #### ✅Login User
 
 - **URL:** `/users/login`
@@ -96,6 +98,44 @@ POST /users/login
   "token": "..."
 }
 ```
+
+---
+
+#### ✅Get User Profile
+
+- **URL:** `/users/profile`
+- **Method:** `GET`
+- **Headers:**
+  - `Authorization: Bearer <token>` (or send token as cookie)
+- **Auth Required:** Yes
+- **Responses:**
+  - `200 OK`: `{ user }`
+  - `401 Unauthorized`: `{ message: 'Unauthorized' }`
+
+**Example Success Response:**
+
+```json
+{
+  "user": {
+    "_id": "...",
+    "fullname": { "firstname": "John", "lastname": "Doe" },
+    "email": "john@example.com"
+  }
+}
+```
+
+---
+
+#### ✅Logout User
+
+- **URL:** `/users/logout`
+- **Method:** `GET`
+- **Auth Required:** Yes
+- **Responses:**
+  - `200 OK`: `{ message: 'Logged out successfully' }`
+  - `401 Unauthorized`: `{ message: 'Unauthorized' }`
+
+> Note: This route only clears the authentication cookie. If you use Authorization headers (Bearer tokens), server-side token blacklisting is not implemented yet.
 
 ---
 
