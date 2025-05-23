@@ -24,7 +24,7 @@ This is the backend for the Uber Clone project, built with Node.js, Express, and
 
 ### User Routes
 
-#### Register User
+#### ✅Register User
 
 - **URL:** `/users/register`
 - **Method:** `POST`
@@ -39,6 +39,7 @@ This is the backend for the Uber Clone project, built with Node.js, Express, and
   - `500 Internal Server Error`: `{ message: ... }`
 
 **Example Request:**
+
 ```json
 POST /users/register
 {
@@ -49,6 +50,42 @@ POST /users/register
 ```
 
 **Example Success Response:**
+
+```json
+{
+  "user": {
+    "_id": "...",
+    "fullname": { "firstname": "John", "lastname": "Doe" },
+    "email": "john@example.com"
+  },
+  "token": "..."
+}
+```
+---
+#### ✅Login User
+
+- **URL:** `/users/login`
+- **Method:** `POST`
+- **Body Parameters:**
+  - `email` (string, required, must be valid email)
+  - `password` (string, required, min 6 chars)
+- **Responses:**
+  - `200 OK`: `{ user, token }`
+  - `401 Unauthorized`: `{ message: 'Invalid email or password' }`
+  - `422 Unprocessable Entity`: `{ errors: [...] }`
+
+**Example Request:**
+
+```json
+POST /users/login
+{
+  "email": "john@example.com",
+  "password": "secret123"
+}
+```
+
+**Example Success Response:**
+
 ```json
 {
   "user": {
@@ -72,7 +109,9 @@ POST /users/register
 - `services/` - Business logic
 
 ---
+
 ## Libraries Used
+
 - express
 - mongoose
 - dotenv
