@@ -139,6 +139,139 @@ POST /users/login
 
 ---
 
+### Captain Routes
+
+#### ✅Register Captain
+
+- **URL:** `/captains/register`
+- **Method:** `POST`
+- **Body Parameters:**
+  - `fullname.firstname` (string, required, min 3 chars)
+  - `fullname.lastname` (string, optional, min 3 chars)
+  - `email` (string, required, must be valid email)
+  - `password` (string, required, min 6 chars)
+  - `vehicle.color` (string, required, min 3 chars)
+  - `vehicle.plate` (string, required, min 3 chars)
+  - `vehicle.capacity` (number, required, min 1)
+  - `vehicle.vehicleType` (string, required, one of: 'car', 'auto', 'motorcycle')
+- **Responses:**
+  - `201 Created`: `{ captain }`
+  - `409 Conflict`: `{ message: 'Captain already exists' }`
+  - `422 Unprocessable Entity`: `{ errors: [...] }`
+  - `500 Internal Server Error`: `{ message: ... }`
+
+**Example Request:**
+
+```json
+POST /captains/register
+{
+  "fullname": { "firstname": "Jane", "lastname": "Smith" },
+  "email": "jane@example.com",
+  "password": "secret123",
+  "vehicle": {
+    "color": "Red",
+    "plate": "XYZ123",
+    "capacity": 4,
+    "vehicleType": "car"
+  }
+}
+```
+
+**Example Success Response:**
+
+```json
+{
+  "captain": {
+    "_id": "...",
+    "fullname": { "firstname": "Jane", "lastname": "Smith" },
+    "email": "jane@example.com",
+    "vehicle": {
+      "color": "Red",
+      "plate": "XYZ123",
+      "capacity": 4,
+      "vehicleType": "car"
+    }
+  }
+}
+```
+
+---
+
+#### ✅Login Captain
+
+- **URL:** `/captains/login`
+- **Method:** `POST`
+- **Body Parameters:**
+  - `email` (string, required, must be valid email)
+  - `password` (string, required, min 6 chars)
+- **Responses:**
+  - `200 OK`: `{ captain, token }`
+  - `401 Unauthorized`: `{ message: 'Captain does not exists' }` or `{ message: 'Invalid email or password' }`
+  - `422 Unprocessable Entity`: `{ errors: [...] }`
+
+**Example Request:**
+
+```json
+POST /captains/login
+{
+  "email": "jane@example.com",
+  "password": "secret123"
+}
+```
+
+**Example Success Response:**
+
+```json
+{
+  "captain": {
+    "_id": "...",
+    "fullname": { "firstname": "Jane", "lastname": "Smith" },
+    "email": "jane@example.com"
+  },
+  "token": "..."
+}
+```
+
+---
+
+#### ✅Get Captain Profile
+
+- **URL:** `/captains/profile`
+- **Method:** `GET`
+- **Headers:**
+  - `Authorization: Bearer <token>` (or send token as cookie)
+- **Auth Required:** Yes
+- **Responses:**
+  - `200 OK`: `{ captain }`
+  - `401 Unauthorized`: `{ message: 'Unauthorized' }`
+
+**Example Success Response:**
+
+```json
+{
+  "captain": {
+    "_id": "...",
+    "fullname": { "firstname": "Jane", "lastname": "Smith" },
+    "email": "jane@example.com"
+  }
+}
+```
+
+---
+
+#### ✅Logout Captain
+
+- **URL:** `/captains/logout`
+- **Method:** `GET`
+- **Auth Required:** Yes
+- **Responses:**
+  - `200 OK`: `{ message: 'Logged out successfully' }`
+  - `401 Unauthorized`: `{ message: 'Unauthorized' }`
+
+> Note: This route only clears the authentication cookie. If you use Authorization headers (Bearer tokens), server-side token blacklisting is not implemented yet.
+
+---
+
 ## Project Structure
 
 - `controllers/` - Route handlers

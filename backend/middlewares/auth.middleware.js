@@ -1,7 +1,8 @@
 import User from "../models/user.model.js"
+import Captain from "../models/captain.model.js"
 import jwt from 'jsonwebtoken'
 
-export default async function authUser(req, res, next){
+export async function authUser(req, res, next){
   const token = req.cookies.token || req.headers.authorization?.split(' ')[1]
   if(!token){
     return res.status(401).json({message: 'Unauthorized'})
@@ -19,5 +20,28 @@ export default async function authUser(req, res, next){
     return next()
   }catch(err){
     return res.status(401).json({message: 'Unauthorized'})
+  }
+}
+
+
+export async function authCaptain(req, res, next){
+  const token = req.cookies.token || req.headers.authorization?.split(' ')[1]
+  if(!token){
+    return res.status(401).json({message: "Unauthorized"})
+  }
+
+  try{
+    const decoded = jwt.verify(token, process.env.JWT_SECRET)
+    const captain = await Captain.findById(decoded._id)
+
+    if(!captain){
+      throw new Error('Unauthorized')
+    }
+
+    req.captain = captain
+    next()
+
+  }catch(error){
+    throw new Error('Unauthorized')
   }
 }

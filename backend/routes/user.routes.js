@@ -1,8 +1,7 @@
 import {Router} from 'express'
 import {body} from 'express-validator'
 import {registerUser, loginUser, getUserProfile, logoutUser} from '../controllers/user.controller.js'
-import { get } from 'mongoose'
-import authUser from '../middlewares/auth.middleware.js'
+import {authUser} from '../middlewares/auth.middleware.js'
 
 const userRouter = Router()
 
