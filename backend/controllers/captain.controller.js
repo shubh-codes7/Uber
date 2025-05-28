@@ -2,7 +2,6 @@ import mongoose from 'mongoose'
 import Captain from '../models/captain.model.js'
 import { createCaptain } from '../services/captain.service.js'
 import { validationResult } from 'express-validator'
-import jwt from 'jsonwebtoken'
 
 
 export async function registerCaptain (req, res) {
@@ -29,7 +28,7 @@ export async function registerCaptain (req, res) {
       color: vehicle.color,
       plate: vehicle.plate,
       capacity: vehicle.capacity,
-      vehicleType: vehicle.vehicleType
+      type: vehicle.type
     })
 
     const token = captain.generateAuthToken()

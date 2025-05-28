@@ -1,8 +1,7 @@
-import mongoose from "mongoose";
 import Captain from "../models/captain.model.js";
 
-export const createCaptain = async ({firstname, lastname, email, password, color, plate, capacity, vehicleType}) => {
-  if(!firstname || !email || !password || !color || !plate || !capacity || !vehicleType) {
+export const createCaptain = async ({firstname, lastname, email, password, color, plate, capacity, type}) => {
+  if(!firstname || !email || !password || !color || !plate || !capacity || !type) {
     throw new Error("All fields are required");
   }
 
@@ -17,7 +16,7 @@ export const createCaptain = async ({firstname, lastname, email, password, color
       color,
       plate,
       capacity,
-      vehicleType
+      type
     }
   })
 
