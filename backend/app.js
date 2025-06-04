@@ -5,6 +5,7 @@ import cookieParser from 'cookie-parser'
 import connectDB from '../backend/db/db.js'
 import userRoutes from './routes/user.routes.js'
 import captainRoutes from './routes/captain.routes.js'
+import mapRoutes from './routes/map.routes.js'
 dotenv.config()
 
 const app = express()
@@ -18,6 +19,7 @@ app.use(cookieParser())
 
 app.use('/user', userRoutes)
 app.use('/captain', captainRoutes)
+app.use('/map', mapRoutes)
 
 app.get("/", (req, res) => {
     console.log("Hello")

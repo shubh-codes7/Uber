@@ -1,5 +1,4 @@
 import uberLogo from "../assets/uber_logo.png";
-import mapImg from "../assets/map.png"
 import { useRef, useState } from "react";
 import gsap from 'gsap'
 import ConfirmRide from '../components/ConfirmRide.jsx'
@@ -124,7 +123,7 @@ const Home = () => {
     <div className="h-screen relative">
       <img className="w-16 m-8 absolute mb-10" src={uberLogo} />
       <div className="h-screen w-screen">
-        <img className="object-cover object-left h-full w-full" src={mapImg}/>
+        <img className="object-cover h-full w-full" src="https://miro.medium.com/v2/resize:fit:1400/0*gwMx05pqII5hbfmX.gif"/>
       </div>
       {/* Panel to find trip */}
       <div className="flex flex-col justify-end h-screen absolute top-0 w-full">

@@ -7,9 +7,6 @@ import { Link } from 'react-router-dom'
 
 const Riding = () => {
 
-   
-
-
     return (
         <div className='h-screen'>
             <Link to='/home' className='fixed right-2 top-2 h-10 w-10 bg-white flex items-center justify-center rounded-full'>
