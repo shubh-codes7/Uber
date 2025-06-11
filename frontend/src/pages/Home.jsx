@@ -197,7 +197,6 @@ const Home = () => {
   }, [user])
 
     socket.on('ride-confirmed', ride => {
-      console.log("listening ride confiremed in home")
       setvehiclePanel(false)
       setWaitingForDriverPanel(true)
       setRide(ride)
@@ -213,14 +212,14 @@ const Home = () => {
   return (
     <div className="h-svh relative">
       <img className="w-16 m-8 absolute mb-10" src={uberLogo} />
-      <div className="h-3/5 w-screen">
+      <div className="h-3/5">
         <LiveTracking />
       </div>
       {/* Panel to find trip */}
-      <div className="flex flex-col justify-end h-svh z-10 absolute top-0 w-full">
+      <div className="flex flex-col justify-end absolute bottom-0 w-full">
         {/* Panel first half of trip input */}
         <div className="bg-white w-full p-5 pl-8 pr-8 relative ">
-          <h4 className="text-3xl font-semibold  mb-3">Find a trip</h4>
+          <h4 className="text-3xl font-semibold mb-3">Find a trip</h4>
           <i
             ref={panelCloseRef}
             onClick={() => setTripPanel(false)}
@@ -375,7 +374,7 @@ const Home = () => {
       {/* Looking for driver panel */}
       <div
         ref={rideFoundRef}
-        className="fixed z-11 bottom-[-10] bg-white p-5 px-5 w-full translate-y-full"
+        className="fixed z-11 bottom-[-20] bg-white p-5 px-5 w-full translate-y-full"
       >
         <LookingForDriver 
           pickup={pickup}
