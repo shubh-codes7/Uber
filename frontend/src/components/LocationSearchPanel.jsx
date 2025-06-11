@@ -2,7 +2,7 @@
 const LocationSearchPanel = ({ activeField, suggestions, setPickup, setDestination}) => {
   
   return (
-    <div >
+    <div className="overflow-y-auto" >
 
       {
         suggestions.length > 0 && suggestions.map((location, index) => {

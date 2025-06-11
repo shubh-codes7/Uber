@@ -29,7 +29,7 @@ export default function ConfirmRidePopup({
     }
   }
   return (
-    <div>
+    <div className="h-svh">
       <i
         onClick={() => setConfirmRidePopupPanel(false)}
         className="ri-arrow-down-wide-line w-full inline-block text-center text-gray-400 text-2xl"

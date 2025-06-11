@@ -1,7 +1,7 @@
 export default function ConfirmRide({setConfirmRidePanel, setRideFoundPanel, createRide, pickup, destination, fare, vehicleType}) {
     
     return (
-        <div>
+        <div className="h-svh overflow-y-auto">
             <i onClick={()=> {
                 setConfirmRidePanel(false)
                 }
