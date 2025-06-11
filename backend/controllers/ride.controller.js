@@ -25,7 +25,7 @@ export async function createRide(req, res){
       });
     }
 
-    const captainsInRadius = await getCaptainInRadiusService(pickupCoordinates.ltd, pickupCoordinates.lng, 2)
+    const captainsInRadius = await getCaptainInRadiusService(pickupCoordinates.ltd, pickupCoordinates.lng, 2000)
     // console.log("captain in radius",captainsInRadius)
     ride.otp = ''
 
@@ -98,7 +98,7 @@ export async function startRide(req, res) {
     try {
         const ride = await startRideService({ rideId, otp, captain: req.captain });
 
-        console.log(ride);
+        // console.log(ride);
 
         sendMessageToSocketId(ride.user.socketId, {
             event: 'ride-started',

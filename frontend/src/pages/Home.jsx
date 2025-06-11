@@ -95,8 +95,7 @@ const Home = () => {
       }
   );
 
-  // setRide(response.data)
-  console.log(response)
+  console.log("ride info", response.data)
 
 }
 
@@ -192,13 +191,13 @@ const Home = () => {
 
   const { socket } = useContext(SocketContext)
   const { user } = useContext(UserDataContext)
-  console.log("user",user)
 
   useEffect(() => {
     socket.emit("join", { userType: "user", userId: user._id })
   }, [user])
 
     socket.on('ride-confirmed', ride => {
+      console.log("listening ride confiremed in home")
       setvehiclePanel(false)
       setWaitingForDriverPanel(true)
       setRide(ride)

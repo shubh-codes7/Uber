@@ -32,7 +32,12 @@ export async function registerCaptain (req, res) {
     })
 
     const token = captain.generateAuthToken()
-    res.cookie('captainToken', token)
+    res.cookie('captainToken', token, {
+      httpOnly: true,
+      secure: true, // Required for SameSite=None
+      sameSite: 'none',
+      maxAge: 24 * 60 * 60 * 1000 // 24 hours
+    })
 
     return res.status(201).json({ captain })
   } catch (error) {

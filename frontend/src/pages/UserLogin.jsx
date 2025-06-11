@@ -4,7 +4,7 @@ import { UserDataContext } from '../context/UserContext'
 import { useState } from "react";
 import axios from "axios";
 import { useContext } from "react";
-const BASE_URL = import.meta.env.VITE_BASE_URL;
+// const BASE_URL = import.meta.env.VITE_BASE_URL;
 
 const UserLogin = () => {
 const [ email, setEmail ] = useState('')
@@ -24,12 +24,12 @@ const [ email, setEmail ] = useState('')
       password: password
     }
 
-    const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/user/login`, userData)
+    const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/user/login`, userData, {withCredentials: true})
 
     if (response.status === 200) {
       const data = response.data
       setUser(data.user)
-      localStorage.setItem('token', data.token)
+      localStorage.setItem('userToken', data.token)
       navigate('/home')
     }
 

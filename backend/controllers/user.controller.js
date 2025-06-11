@@ -28,8 +28,10 @@ export async function registerUser(req, res) {
 
     const token = user.generateAuthToken();
     res.cookie('userToken', token, {
-      maxAge: 24 * 60 * 60 * 1000, // 24 hours
-      path: '/'
+      httpOnly: true,
+      secure: true, // Required for SameSite=None
+      sameSite: 'none',
+      maxAge: 24 * 60 * 60 * 1000 // 24 hours
     });
     return res.status(201).json( user );
   } catch (error) {
@@ -57,7 +59,12 @@ export async function loginUser(req, res) {
     return res.status(401).json({ message: 'Invalid email or password' });
   }
   const token = user.generateAuthToken();
-  res.cookie('userToken', token)
+  res.cookie('userToken', token, {
+    httpOnly: true,
+    secure: true, // Required for SameSite=None
+    sameSite: 'none',
+    maxAge: 24 * 60 * 60 * 1000 // 24 hours
+  })
   return res.status(200).json({ user, token });
 }    
 
@@ -68,7 +75,7 @@ export async function getUserProfile(req, res) {
 
 
 export async function logoutUser(req, res) {
-  res.clearCookie('UserToken');
+  res.clearCookie('userToken');
   return res.status(200).json({ message: 'Logged out successfully' });
 }
 

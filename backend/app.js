@@ -16,7 +16,8 @@ const app = express()
 connectDB()
 
 app.use(cors({
-  origin: ['https://rctxllw9-5173.inc1.devtunnels.ms', 'http://localhost:5173'],
+  origin: [process.env.CLIENT_URL, 'https://rctxllw9-5173.inc1.devtunnels.ms', 'http://localhost:5173'],
+  // origin: process.env.CLIENT_URL,
   credentials: true
 }))
 app.use(express.json())

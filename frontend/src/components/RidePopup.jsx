@@ -1,5 +1,4 @@
 export default function RidePopup({setRidePopupPanel, setConfirmRidePopupPanel, ride, confirmRide}) {
-    console.log(ride)
     
     return (
         <div>
