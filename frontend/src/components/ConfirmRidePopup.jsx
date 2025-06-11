@@ -1,17 +1,32 @@
+//this is for Captain
+
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 export default function ConfirmRidePopup({
   setRidePopupPanel,
   setConfirmRidePopupPanel,
+  ride
 }) {
   const navigate = useNavigate();
   const [otp, setOtp] = useState('')
 
-  function handleSubmit(e){
-    e.preventDefault()
-    console.log(otp)
-    navigate("/captain-riding")
+  async function handleSubmit(e){
+    e.preventDefault()    
+    const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/ride/start-ride`, {
+      params: {
+        rideId: ride._id,
+        otp: otp
+      },
+      withCredentials: true
+    })
+
+    if(response.status === 200){
+      setConfirmRidePopupPanel(false)
+      setRidePopupPanel(false)
+      navigate("/captain-riding", {state: {ride: ride}})
+    }
   }
   return (
     <div>
@@ -27,7 +42,7 @@ export default function ConfirmRidePopup({
             className="rounded-full w-13 h-13 object-cover"
             src="https://cbx-prod.b-cdn.net/COLOURBOX30246605.jpg?width=800&height=800&quality=70"
           />
-          <h4 className="text-lg font-medium">Shubham Rathod</h4>
+          <h4 className="text-lg font-medium">{ride?.user.fullname?.firstname + " " + ride?.user.fullname?.lastname}</h4>
         </div>
         <h5 className="font-medium">2.2 KM</h5>
       </div>
@@ -37,23 +52,23 @@ export default function ConfirmRidePopup({
           <div className="flex items-center gap-5 p-3 border-b-2">
             <i className="ri-map-pin-user-fill text-3xl"></i>
             <div>
-              <h3 className="text-lg font-medium">562/11-A</h3>
+              <h3 className="text-lg font-medium">Pickup</h3>
               <p className="text-base mt-1 text-gray-600">
-                Abhiyanta Nagar, Nashik
+                {ride?.pickup}
               </p>
             </div>
           </div>
           <div className="flex items-center gap-5 p-3 border-b-2">
             <i className="ri-map-pin-2-fill text-3xl"></i>
             <div>
-              <h3 className="text-lg font-medium">562/11-A</h3>
-              <p className="text-base mt-1 text-gray-600">Panchvati, Nashik</p>
+              <h3 className="text-lg font-medium">Destination</h3>
+              <p className="text-base mt-1 text-gray-600">{ride?.destination}</p>
             </div>
           </div>
           <div className="flex items-center gap-5 p-3">
             <i className="ri-currency-line text-3xl"></i>
             <div>
-              <h3 className="text-lg font-medium">₹213</h3>
+              <h3 className="text-lg font-medium">₹{ride?.fare}</h3>
               <p className="text-base mt-1 text-gray-600">Cash</p>
             </div>
           </div>

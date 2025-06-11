@@ -1,82 +1,84 @@
-import { Link } from "react-router-dom";
-import uberLogo from "../assets/uber_logo.png";
-import { useState } from "react";
-import axios from "axios";
-import { useNavigate } from "react-router-dom";
-const BASE_URL = import.meta.env.VITE_BASE_URL
+import React, { useState } from 'react'
+import { Link } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
+import axios from 'axios'
+import { CaptainDataContext } from '../context/CaptainContext'
 
-const CaptainLogin = () => {
+const Captainlogin = () => {
+
+  const [ email, setEmail ] = useState('')
+  const [ password, setPassword ] = useState('')
+
+  const { captain, setCaptain } = React.useContext(CaptainDataContext)
   const navigate = useNavigate()
 
-  const [captain, setCaptain] = useState({
-    email: '',
-    password: ''
-  })
 
-  async function handleSubmit(e){
-    e.preventDefault()
-    const response = await axios.post(`${BASE_URL}/captain/login`, captain)
-    if(response.status === 200){
-      navigate('/home')
+
+  const submitHandler = async (e) => {
+    e.preventDefault();
+    const captain = {
+      email: email,
+      password
     }
-    
-    setCaptain({
-      email: '',
-      password: ''
-    })
-  }
 
-  function handleCaptain(e){
-    const {name, value} = e.target
-    setCaptain(prev => ({...prev, [name]: value}))
-  }
+    const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/captain/login`, captain, {withCredentials: true})
 
+    if (response.status === 200) {
+      setCaptain(response.data.captain);
+      navigate('/captain-home')
+
+    }
+
+    setEmail('')
+    setPassword('')
+  }
   return (
-    <div className="p-8 flex flex-col justify-between h-screen">
+    <div className='p-7 h-screen flex flex-col justify-between'>
       <div>
-        <img className="w-16 mb-10" src={uberLogo} />
-        <form onSubmit={handleSubmit}>
-          <label className="text-xl font-medium">What's your Email Captain?</label>
+        <img className='w-20 mb-3' src="https://www.svgrepo.com/show/505031/uber-driver.svg" alt="" />
+
+        <form onSubmit={(e) => {
+          submitHandler(e)
+        }}>
+          <h3 className='text-lg font-medium mb-2'>What's your email</h3>
           <input
+            required
+            value={email}
+            onChange={(e) => {
+              setEmail(e.target.value)
+            }}
+            className='bg-[#eeeeee] mb-7 rounded-lg px-4 py-2 border w-full text-lg placeholder:text-base'
             type="email"
-            placeholder="xyz@gmail.com"
-            value={captain.email}
-            name="email"
-            onChange={handleCaptain}
-            className="border border-gray-300 bg-gray-200 mt-2 mb-4 p-2 rounded w-full text-lg"
-            required
+            placeholder='email@example.com'
           />
-          <label className="text-xl font-medium">What's your Password?</label>
+
+          <h3 className='text-lg font-medium mb-2'>Enter Password</h3>
+
           <input
-            type="password"
-            placeholder="password"
-            value={captain.password}
-            name="password"
-            onChange={handleCaptain}
-            className="border border-gray-300 bg-gray-200 mt-2 mb-4 p-2 rounded w-full text-lg"
-            required
+            className='bg-[#eeeeee] mb-7 rounded-lg px-4 py-2 border w-full text-lg placeholder:text-base'
+            value={password}
+            onChange={(e) => {
+              setPassword(e.target.value)
+            }}
+            required type="password"
+            placeholder='password'
           />
-          <button type="submit" className="text-center text-xl w-full bg-black text-white py-3 rounded mt-4">
-            Login
-          </button>
+
+          <button
+            className='bg-[#111] text-white font-semibold mb-3 rounded-lg px-4 py-2 w-full text-lg placeholder:text-base'
+          >Login</button>
+
         </form>
-        <div className="text-center mt-4">
-          <span className="text-gray-700">Don't have an account? </span>
-          <Link to="/captain-signup" className="text-blue-500">
-            Sign Up
-          </Link>
-        </div>
+        <p className='text-center'>Join a fleet? <Link to='/captain-signup' className='text-blue-600'>Register as a Captain</Link></p>
       </div>
       <div>
         <Link
-          to="/login"
-          className="inline-block text-center text-xl w-full bg-black text-white py-3 rounded mt-4"
-        >
-          Login as User
-        </Link>
+          to='/login'
+          className='bg-[#d5622d] flex items-center justify-center text-white font-semibold mb-5 rounded-lg px-4 py-2 w-full text-lg placeholder:text-base'
+        >Sign in as User</Link>
       </div>
     </div>
   )
 }
 
-export default CaptainLogin
+export default Captainlogin

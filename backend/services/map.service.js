@@ -1,16 +1,16 @@
 import axios from 'axios'
+import Captain from '../models/captain.model.js'
 
 export async function getAddressCoordinateService(address){
   const apiKey = process.env.MAP_API
   const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(address)}&key=${apiKey}`
-  console.log(apiKey)
 
   try{
     const response = await axios.get(url)
     if(response.data.status === 'OK'){
       const location = response.data.results[0].geometry.location
       return {
-        ltd: location.ltd,
+        ltd: location.lat,
         lng: location.lng
       }
     }else{
@@ -59,7 +59,7 @@ export async function getSuggestionsService(input){
   try {
     const response = await axios.get(url);
     if (response.data.status === 'OK') {
-      return response.data.predictions;
+      return response.data.predictions
     } else {
       throw new Error('Unable to fetch suggestions');
     }
@@ -68,4 +68,16 @@ export async function getSuggestionsService(input){
     throw error;
   }
 
+}
+
+export async function getCaptainInRadiusService(ltd, lng, radius){
+  const captains = await Captain.find({
+    location: {
+      $geoWithin: {
+        $centerSphere: [ [ ltd, lng ], radius / 6371 ]
+      }
+    }
+  });
+
+  return captains;
 }

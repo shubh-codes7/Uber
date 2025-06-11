@@ -31,6 +31,7 @@ const userSchema = mongoose.Schema({
 
     socketId: {
         type: String,
+        select: true
     }
 })
 

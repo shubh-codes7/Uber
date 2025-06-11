@@ -1,52 +1,58 @@
 import { Link, useNavigate } from "react-router-dom";
 import uberLogo from "../assets/uber_logo.png";
+import { UserDataContext } from '../context/UserContext'
 import { useState } from "react";
 import axios from "axios";
+import { useContext } from "react";
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 
 const UserLogin = () => {
+const [ email, setEmail ] = useState('')
+  const [ password, setPassword ] = useState('')
+  const [ userData, setUserData ] = useState({})
 
+  const { user, setUser } = useContext(UserDataContext)
   const navigate = useNavigate()
 
-  const [user, setUser] = useState({
-    email: '',
-    password: ''
-  })
 
-  async function handleSubmit(e){
-    e.preventDefault()
 
-    const res = await axios.post(`${BASE_URL}/user/login`, user)
-    
-    if(res.status === 200){
-      alert("logged in")
+  const submitHandler = async (e) => {
+    e.preventDefault();
+
+    const userData = {
+      email: email,
+      password: password
     }
 
-    navigate('/home')
+    const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/user/login`, userData)
 
-    setUser({
-      email: '',
-      password: ''
-    })
+    if (response.status === 200) {
+      const data = response.data
+      setUser(data.user)
+      localStorage.setItem('token', data.token)
+      navigate('/home')
+    }
+
+
+    setEmail('')
+    setPassword('')
   }
 
-  function handleUser(e){
-    const {name, value} = e.target
-    setUser(prev => ({...prev, [name]: value}))
-  }
 
   return (
     <div className="p-8 flex flex-col justify-between h-screen">
       <div>
         <img className="w-16 mb-10" src={uberLogo} />
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={submitHandler}>
           <label className="text-xl font-medium">What's your Email?</label>
           <input
             type="email"
             placeholder="xyz@gmail.com"
-            value={user.email}
+            value={email}
             name="email"
-            onChange={handleUser}
+            onChange={(e) => {
+              setEmail(e.target.value)
+            }}
             className="border border-gray-300 bg-gray-200 mt-2 mb-4 p-2 rounded w-full text-lg"
             required
           />
@@ -54,9 +60,11 @@ const UserLogin = () => {
           <input
             type="password"
             placeholder="password"
-            value={user.password}
+            value={password}
             name="password"
-            onChange={handleUser}
+            onChange={(e) => {
+              setPassword(e.target.value)
+            }}
             className="border border-gray-300 bg-gray-200 mt-2 mb-4 p-2 rounded w-full text-lg"
             required
           />

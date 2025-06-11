@@ -3,7 +3,7 @@ import Captain from "../models/captain.model.js"
 import jwt from 'jsonwebtoken'
 
 export async function authUser(req, res, next){
-  const token = req.cookies.token || req.headers.authorization?.split(' ')[1]
+  const token = req.cookies.userToken
   if(!token){
     return res.status(401).json({message: 'Unauthorized'})
   }
@@ -25,7 +25,7 @@ export async function authUser(req, res, next){
 
 
 export async function authCaptain(req, res, next){
-  const token = req.cookies.token || req.headers.authorization?.split(' ')[1]
+  const token = req.cookies.captainToken
   if(!token){
     return res.status(401).json({message: "Unauthorized"})
   }

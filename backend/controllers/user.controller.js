@@ -25,8 +25,13 @@ export async function registerUser(req, res) {
       email,
       password: hashedPassword,
     });
+
     const token = user.generateAuthToken();
-    return res.status(201).json({ user, token });
+    res.cookie('userToken', token, {
+      maxAge: 24 * 60 * 60 * 1000, // 24 hours
+      path: '/'
+    });
+    return res.status(201).json( user );
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }
@@ -52,7 +57,7 @@ export async function loginUser(req, res) {
     return res.status(401).json({ message: 'Invalid email or password' });
   }
   const token = user.generateAuthToken();
-  res.cookie('token', token)
+  res.cookie('userToken', token)
   return res.status(200).json({ user, token });
 }    
 
@@ -63,7 +68,7 @@ export async function getUserProfile(req, res) {
 
 
 export async function logoutUser(req, res) {
-  res.clearCookie('token');
+  res.clearCookie('UserToken');
   return res.status(200).json({ message: 'Logged out successfully' });
 }
 

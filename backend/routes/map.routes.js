@@ -20,7 +20,7 @@ mapRouter.get('/get-distance-time',
 
 mapRouter.get('/get-suggestions',
   query('input').isString().isLength({min:3}),
-  authUser,
+  // authUser,
   getAutoCompleteSuggestions
 )
 

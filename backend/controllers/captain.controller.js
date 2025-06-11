@@ -32,7 +32,7 @@ export async function registerCaptain (req, res) {
     })
 
     const token = captain.generateAuthToken()
-    res.cookie('token', token)
+    res.cookie('captainToken', token)
 
     return res.status(201).json({ captain })
   } catch (error) {
@@ -59,12 +59,17 @@ export async function loginCaptain(req, res){
   }
 
   const token = captain.generateAuthToken()
-  res.cookie("token", token)
+  res.cookie('captainToken', token, {
+    httpOnly: true,
+    secure: true, // Required for SameSite=None
+    sameSite: 'none',
+    maxAge: 24 * 60 * 60 * 1000 // 24 hours
+  })
   return res.status(200).json({captain, token})
 }
 
 export async function logoutCaptain(req, res){
-  res.clearCookie('token')
+  res.clearCookie('captainToken')
   res.status(200).json({message: "Logged out successfully"})
 }
 

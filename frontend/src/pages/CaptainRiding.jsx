@@ -1,14 +1,18 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import uberlogo from "../assets/uber_logo.png";
 import { useRef, useState } from "react";
 import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
 import FinishRide from "../components/FinishRide";
+import LiveTracking from "../components/LiveTracking";
 
 export default function CaptainRiding() {
 
   const [ finishRidePanel, setFinishRidePanel ] = useState(false)
   const finishRidePanelRef = useRef(null)
+
+  const location = useLocation()
+  const rideData = location.state?.ride
 
   useGSAP(function () {
         if (finishRidePanel) {
@@ -28,17 +32,14 @@ export default function CaptainRiding() {
       <div className="fixed items-center justify-between w-full top-0 p-5">
         <img className="w-20 " src={uberlogo} />
         <Link
-          to="/home"
+          to="/captain-home"
           className="fixed right-2 top-2 h-10 w-10 bg-white flex items-center justify-center rounded-full"
         >
           <i className="text-lg font-medium ri-logout-box-r-line"></i>
         </Link>
       </div>
-      <div className="h-4/5">
-        <img
-          className="object-cover h-full w-full"
-          src="https://miro.medium.com/v2/resize:fit:1400/0*gwMx05pqII5hbfmX.gif"
-        />
+      <div className="h-full">
+        <LiveTracking />
       </div>
 
       <div onClick={()=>setFinishRidePanel(true)} className="h-1/5 p-6 flex items-center justify-between relative bg-yellow-400 pt-10">
@@ -51,7 +52,10 @@ export default function CaptainRiding() {
         </button>
       </div>
       <div ref={finishRidePanelRef} className='fixed w-full z-[500] bottom-0 translate-y-full bg-white px-3 py-10 pt-12'>
-          <FinishRide setFinishRidePanel={setFinishRidePanel} />
+          <FinishRide 
+            ride = {rideData}
+            setFinishRidePanel={setFinishRidePanel} 
+          />
       </div>
     </div>
   );

@@ -25,9 +25,9 @@ const CaptainSignup = () => {
 
   async function handleSubmit(e) {
     e.preventDefault();
-    const response = await axios.post(`${BASE_URL}/captain/register`, captain);
+    const response = await axios.post(`${BASE_URL}/captain/register`, captain, {withCredentials: true});
     if (response.status === 201) {
-      navigate("/home");
+      navigate("/captain-home");
     }
 
     setCaptain({

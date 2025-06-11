@@ -20,7 +20,9 @@ const UserSignup = () => {
   async function handleSubmit(e){
     e.preventDefault()
     
-    const response = await axios.post(`${BASE_URL}/user/register`, user);
+    const response = await axios.post(`${BASE_URL}/user/register`, user,
+      {withCredentials: true}
+    );
     if(response.status === 201){
       navigate('/home')
     }
