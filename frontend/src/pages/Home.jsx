@@ -119,7 +119,7 @@ const Home = () => {
   useGSAP(() => {
     if (tripPanel) {
       gsap.to(panelRef.current, {
-        height: "70%",
+        height: "100%",
       });
       gsap.to(panelCloseRef.current, {
         opacity: 1,
@@ -152,10 +152,12 @@ const Home = () => {
     if (confirmRidePanel) {
       gsap.to(confirmRidePanelRef.current, {
         transform: "translateY(0)",
+        display: "block"
       });
     } else {
       gsap.to(confirmRidePanelRef.current, {
         transform: "translateY(100%)",
+        display: "none"
       });
     }
   }, [confirmRidePanel]);
@@ -166,10 +168,12 @@ const Home = () => {
       gsap.to(rideFoundRef.current, {
         transform: "translateY(0)",
         height: "100%",
+        display: "block"
       });
     } else {
       gsap.to(rideFoundRef.current, {
         transform: "translateY(100%)",
+        display: "none"
       });
     }
   }, [rideFoundPanel]);
@@ -197,6 +201,7 @@ const Home = () => {
   }, [user])
 
     socket.on('ride-confirmed', ride => {
+      console.log("listening ride confiremed in home")
       setvehiclePanel(false)
       setWaitingForDriverPanel(true)
       setRide(ride)
@@ -212,11 +217,11 @@ const Home = () => {
   return (
     <div className="h-svh relative">
       <img className="w-16 m-8 absolute mb-10" src={uberLogo} />
-      <div className="h-3/5">
+      <div className="h-3/5 w-screen">
         <LiveTracking />
       </div>
       {/* Panel to find trip */}
-      <div className="flex flex-col justify-end absolute bottom-0 w-full">
+      <div className="flex flex-col justify-end h-svh absolute top-0 w-full">
         {/* Panel first half of trip input */}
         <div className="bg-white w-full p-5 pl-8 pr-8 relative ">
           <h4 className="text-3xl font-semibold mb-3">Find a trip</h4>
@@ -374,7 +379,7 @@ const Home = () => {
       {/* Looking for driver panel */}
       <div
         ref={rideFoundRef}
-        className="fixed z-11 bottom-[-20] bg-white p-5 px-5 w-full translate-y-full"
+        className="fixed z-11 bottom-0 bg-white p-5 px-5 w-full translate-y-full"
       >
         <LookingForDriver 
           pickup={pickup}
