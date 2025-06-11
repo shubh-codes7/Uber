@@ -211,13 +211,13 @@ const Home = () => {
 
   
   return (
-    <div className="h-screen relative">
+    <div className="h-svh relative">
       <img className="w-16 m-8 absolute mb-10" src={uberLogo} />
-      <div className="h-screen w-screen">
+      <div className="h-3/5 w-screen">
         <LiveTracking />
       </div>
       {/* Panel to find trip */}
-      <div className="flex flex-col justify-end h-screen absolute top-0 w-full">
+      <div className="flex flex-col justify-end h-svh z-10 absolute top-0 w-full">
         {/* Panel first half of trip input */}
         <div className="bg-white w-full p-5 pl-8 pr-8 relative ">
           <h4 className="text-3xl font-semibold mb-3">Find a trip</h4>

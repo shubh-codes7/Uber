@@ -40,7 +40,7 @@ const [ email, setEmail ] = useState('')
 
 
   return (
-    <div className="p-8 flex flex-col justify-between h-screen">
+    <div className="p-8 flex flex-col justify-between h-svh">
       <div>
         <img className="w-16 mb-10" src={uberLogo} />
         <form onSubmit={submitHandler}>
