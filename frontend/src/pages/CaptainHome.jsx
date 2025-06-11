@@ -101,7 +101,7 @@ export default function CaptainHome() {
   }, [confirmRidePopupPanel]);
 
   return (
-    <div className="h-screen">
+    <div className="h-svh">
       <div className="fixed items-center justify-between w-full top-0 p-5">
         <img className="w-20 " src={uberlogo} />
         <Link

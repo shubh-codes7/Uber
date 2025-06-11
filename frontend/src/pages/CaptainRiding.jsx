@@ -28,7 +28,7 @@ export default function CaptainRiding() {
 
 
   return (
-    <div className="h-screen relative flex flex-col justify-end">
+    <div className="h-svh relative flex flex-col justify-end">
       <div className="fixed items-center justify-between w-full top-0 p-5">
         <img className="w-20 " src={uberlogo} />
         <Link

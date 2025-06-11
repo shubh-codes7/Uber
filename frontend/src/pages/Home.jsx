@@ -220,7 +220,7 @@ const Home = () => {
       <div className="flex flex-col justify-end h-svh z-10 absolute top-0 w-full">
         {/* Panel first half of trip input */}
         <div className="bg-white w-full p-5 pl-8 pr-8 relative ">
-          <h4 className="text-3xl font-semibold mb-3">Find a trip</h4>
+          <h4 className="text-3xl font-semibold  mb-3">Find a trip</h4>
           <i
             ref={panelCloseRef}
             onClick={() => setTripPanel(false)}
@@ -375,7 +375,7 @@ const Home = () => {
       {/* Looking for driver panel */}
       <div
         ref={rideFoundRef}
-        className="fixed z-11 bottom-0 bg-white p-5 px-5 w-full translate-y-full"
+        className="fixed z-11 bottom-[-10] bg-white p-5 px-5 w-full translate-y-full"
       >
         <LookingForDriver 
           pickup={pickup}
