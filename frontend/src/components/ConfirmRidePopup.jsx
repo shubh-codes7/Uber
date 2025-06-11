@@ -29,12 +29,12 @@ export default function ConfirmRidePopup({
     }
   }
   return (
-    <div>
+    <div className="h-screen">
       <i
         onClick={() => setConfirmRidePopupPanel(false)}
         className="ri-arrow-down-wide-line w-full inline-block text-center mt-3 text-gray-400 text-2xl"
       ></i>
-      <h3 className="text-3xl font-semibold mt-2 mb-7">Confirm Ride</h3>
+      <h3 className="text-3xl font-semibold mb-7">Confirm Ride</h3>
 
       <div className="flex items-center justify-between p-3 bg-amber-300 rounded-lg">
         <div className="flex items-center justify-start gap-3">
