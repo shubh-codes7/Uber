@@ -29,7 +29,7 @@ export default function ConfirmRidePopup({
     }
   }
   return (
-    <div className="h-svh">
+    <div>
       <i
         onClick={() => setConfirmRidePopupPanel(false)}
         className="ri-arrow-down-wide-line w-full inline-block text-center text-gray-400 text-2xl"
@@ -75,7 +75,7 @@ export default function ConfirmRidePopup({
         </div>
         <div className="mt-6 w-full">
           <form onSubmit={handleSubmit}>
-            <input value={otp} onChange={(e) => setOtp(e.target.value)} type="text" placeholder="Enter OTP" className="border font-mono mx-auto border-gray-300 bg-gray-200 mt-2 mb-3 p-2 rounded w-1/2 block text-lg" />
+            <input value={otp} onChange={(e) => setOtp(e.target.value)} type="text" placeholder="Enter OTP" className="border font-mono mx-auto border-gray-300 bg-gray-200 m-1 p-2 rounded w-1/2 block text-lg" />
             <button
               type="submit"
               className="w-full bg-green-600 text-white text-xl mt-3 font-semibold p-3 rounded-xl"
