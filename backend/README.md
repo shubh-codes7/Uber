@@ -26,7 +26,7 @@ This is the backend for the Uber Clone project, built with Node.js, Express, and
 
 #### ✅Register User
 
-- **URL:** `/users/register`
+- **URL:** `/user/register`
 - **Method:** `POST`
 - **Body Parameters:**
   - `fullname.firstname` (string, required, min 3 chars)

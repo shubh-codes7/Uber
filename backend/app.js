@@ -16,7 +16,7 @@ const app = express()
 connectDB()
 
 app.use(cors({
-  origin: [process.env.CLIENT_URL, 'https://rctxllw9-5173.inc1.devtunnels.ms', 'http://localhost:5173'],
+  origin: ['https://uber-two-sage.vercel.app', 'https://uber-shubhams-projects-c201ede4.vercel.app/', process.env.CLIENT_URL,  'https://rctxllw9-5173.inc1.devtunnels.ms', 'http://localhost:5173'],
   // origin: process.env.CLIENT_URL,
   credentials: true
 }))
