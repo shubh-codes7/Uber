@@ -10,6 +10,7 @@ import { SocketContext } from "../context/SocketContext";
 import { CaptainDataContext } from "../context/CaptainContext";
 import ConfirmRidePopup from "../components/ConfirmRidePopup";
 import LiveTracking from "../components/LiveTracking";
+import { toast } from "react-toastify";
 
 export default function CaptainHome() {
   const { socket } = useContext(SocketContext);
@@ -23,38 +24,78 @@ export default function CaptainHome() {
 
   const [ride, setRide] = useState(null);
 
+  // useEffect(() => {
+  //   socket.emit("join", {
+  //     userId: captain._id,
+  //     userType: "captain",
+  //   });
+  //   const updateLocation = () => {
+  //     if (navigator.geolocation) {
+  //       navigator.geolocation.getCurrentPosition((position) => {
+
+  //         socket.emit("update-location-captain", {
+  //           userId: captain._id,
+  //           location: {
+  //             ltd: position.coords.latitude,
+  //             lng: position.coords.longitude,
+  //           },
+  //         });
+  //       });
+  //     }
+  //   };
+
+  //   const locationInterval = setInterval(updateLocation, 10000);
+  //   updateLocation();
+
+  //   // return () => clearInterval(locationInterval)
+  // }, []);
+
+
+  // socket.on("new-ride", (data) => {
+  //   console.log("new ride", data);
+  //   toast.success("New ride request")
+  //   setRide(data);
+  //   setRidePopupPanel(true);
+  // });
+
   useEffect(() => {
-    socket.emit("join", {
-      userId: captain._id,
-      userType: "captain",
-    });
-    const updateLocation = () => {
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition((position) => {
+  socket.emit("join", {
+    userId: captain._id,
+    userType: "captain",
+  });
 
-          socket.emit("update-location-captain", {
-            userId: captain._id,
-            location: {
-              ltd: position.coords.latitude,
-              lng: position.coords.longitude,
-            },
-          });
+  const updateLocation = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition((position) => {
+        socket.emit("update-location-captain", {
+          userId: captain._id,
+          location: {
+            ltd: position.coords.latitude,
+            lng: position.coords.longitude,
+          },
         });
-      }
-    };
+      });
+    }
+  };
 
-    const locationInterval = setInterval(updateLocation, 10000);
-    updateLocation();
-
-    // return () => clearInterval(locationInterval)
-  }, []);
-
-
-  socket.on("new-ride", (data) => {
-    console.log("new ride", data);
+  // Handle new ride request
+  const handleNewRide = (data) => {
     setRide(data);
     setRidePopupPanel(true);
-  });
+  };
+
+  const locationInterval = setInterval(updateLocation, 10000);
+  updateLocation();
+
+  // Add socket event listener
+  socket.on("new-ride", handleNewRide);
+
+  // Cleanup function
+  return () => {
+    clearInterval(locationInterval);
+    socket.off("new-ride", handleNewRide);
+  };
+}, [socket, captain._id]);
 
   async function confirmRide() {
   try {

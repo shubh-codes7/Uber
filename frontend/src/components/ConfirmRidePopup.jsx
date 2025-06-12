@@ -3,31 +3,36 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { toast } from "react-toastify";
 
-export default function ConfirmRidePopup({
-  setRidePopupPanel,
-  setConfirmRidePopupPanel,
-  ride
-}) {
+export default function ConfirmRidePopup({  setRidePopupPanel, setConfirmRidePopupPanel, ride}) {
   const navigate = useNavigate();
   const [otp, setOtp] = useState('')
 
-  async function handleSubmit(e){
-    e.preventDefault()    
-    const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/ride/start-ride`, {
-      params: {
-        rideId: ride._id,
-        otp: otp
-      },
-      withCredentials: true
-    })
+  const [error, setError] = useState(null)
 
-    if(response.status === 200){
+  async function handleSubmit(e){
+    e.preventDefault()   
+    
+    try{
+      const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/ride/start-ride`, {
+        params: {
+          rideId: ride._id,
+          otp: otp
+        },
+        withCredentials: true
+      })
+
       setConfirmRidePopupPanel(false)
       setRidePopupPanel(false)
       navigate("/captain-riding", {state: {ride: ride}})
+    }catch(err){
+      console.log(err)
+      setError(err?.response?.data?.errors[0]?.msg)
+      toast.error(err?.response?.data?.errors[0]?.msg)
     }
   }
+
   return (
     <div className="h-svh">
       <i
@@ -76,6 +81,9 @@ export default function ConfirmRidePopup({
         <div className="mt-6 w-full">
           <form onSubmit={handleSubmit}>
             <input value={otp} onChange={(e) => setOtp(e.target.value)} type="text" placeholder="Enter OTP" className="border font-mono mx-auto border-gray-300 bg-gray-200 m-1 p-2 rounded w-1/2 block text-lg" />
+
+            {error && <p className="text-red-500 text-xl mb-4 text-center mt-3">{error}</p>}
+
             <button
               type="submit"
               className="w-full bg-green-600 text-white text-xl mt-3 font-semibold p-3 rounded-xl"

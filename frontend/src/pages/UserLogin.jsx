@@ -4,6 +4,7 @@ import { UserDataContext } from '../context/UserContext'
 import { useState } from "react";
 import axios from "axios";
 import { useContext } from "react";
+import { toast } from 'react-toastify';
 // const BASE_URL = import.meta.env.VITE_BASE_URL;
 
 const UserLogin = () => {
@@ -34,12 +35,14 @@ const UserLogin = () => {
 
       const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/user/login`, userData, {withCredentials: true})
       setUser(response.data.user)
+      toast.success("User logged in!")
       localStorage.setItem('userToken', response.data.token)
       setEmail('')
       setPassword('')
       navigate('/home')
     }catch(err){
       setError(err?.response?.data?.message)
+      toast.error(err?.response?.data?.message)
     }finally{
       setLoading(false)
     }

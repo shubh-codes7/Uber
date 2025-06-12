@@ -13,6 +13,7 @@ import { SocketContext } from '../context/SocketContext.jsx';
 import { useContext } from 'react';
 import { UserDataContext } from '../context/UserContext.jsx';
 import LiveTracking from '../components/LiveTracking.jsx'
+import { toast } from "react-toastify";
 
 const Home = () => {
 
@@ -199,21 +200,53 @@ const Home = () => {
   const { socket } = useContext(SocketContext)
   const { user } = useContext(UserDataContext)
 
+  // useEffect(() => {
+  //   socket.emit("join", { userType: "user", userId: user._id })
+  // }, [user])
+
+  //   socket.on('ride-confirmed', ride => {
+  //     console.log("listening ride confiremed in home")
+  //     toast.success("ride accepted by captain!")
+  //     setvehiclePanel(false)
+  //     setWaitingForDriverPanel(true)
+  //     setRide(ride)
+  //   })
+
+  //   socket.on('ride-started', ride => {
+  //     toast.info('ride-started')
+  //     setWaitingForDriverPanel(false)
+  //     navigate('/riding', { state: { ride } })
+  //   })
+
+
   useEffect(() => {
-    socket.emit("join", { userType: "user", userId: user._id })
-  }, [user])
+  socket.emit("join", { userType: "user", userId: user._id })
 
-    socket.on('ride-confirmed', ride => {
-      console.log("listening ride confiremed in home")
-      setvehiclePanel(false)
-      setWaitingForDriverPanel(true)
-      setRide(ride)
-    })
+  // Add socket event listeners
+  const handleRideConfirmed = (ride) => {
+    console.log("listening ride confirmed in home")
+    toast.success("ride accepted by captain!")
+    setvehiclePanel(false)
+    setWaitingForDriverPanel(true)
+    setRide(ride)
+  }
 
-    socket.on('ride-started', ride => {
-        setWaitingForDriverPanel(false)
-        navigate('/riding', { state: { ride } })
-    })
+  const handleRideStarted = (ride) => {
+    toast.info('ride-started')
+    setWaitingForDriverPanel(false)
+    navigate('/riding', { state: { ride } })
+  }
+
+  // Attach event listeners
+  socket.on('ride-confirmed', handleRideConfirmed)
+  socket.on('ride-started', handleRideStarted)
+
+  // Cleanup function to remove listeners
+  return () => {
+    socket.off('ride-confirmed', handleRideConfirmed)
+    socket.off('ride-started', handleRideStarted)
+  }
+}, [socket, user._id, navigate]) 
  
 
   

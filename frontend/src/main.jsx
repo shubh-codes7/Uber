@@ -5,6 +5,7 @@ import { BrowserRouter } from 'react-router-dom';
 import UserContext from './context/UserContext.jsx';
 import CaptainContext from './context/CaptainContext.jsx';
 import SocketProvider from './context/SocketContext.jsx';
+import { ToastContainer } from 'react-toastify';
 
 createRoot(document.getElementById('root')).render(
 
@@ -13,6 +14,18 @@ createRoot(document.getElementById('root')).render(
       <SocketProvider>
         <BrowserRouter>
           <App />
+          <ToastContainer
+            position="top-right"
+            autoClose={2000}
+            hideProgressBar={false}
+            newestOnTop={true}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            theme="light"
+          />
         </BrowserRouter>
       </SocketProvider>
     </UserContext>

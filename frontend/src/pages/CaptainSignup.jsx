@@ -6,6 +6,7 @@ import axios from "axios";
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 import { useNavigate } from "react-router-dom";
 import { CaptainDataContext } from '../context/CaptainContext'
+import {toast} from 'react-toastify'
 
 const CaptainSignup = () => {
   const navigate = useNavigate();
@@ -38,6 +39,7 @@ const CaptainSignup = () => {
       const response = await axios.post(`${BASE_URL}/captain/register`, formData, {withCredentials: true});
       setCaptain(response.data.captain)
       localStorage.setItem('captainToken', response.data.token);
+      toast.success("Captain Created!")
 
       setFormData({
         fullname: {
@@ -56,6 +58,7 @@ const CaptainSignup = () => {
       navigate("/captain-home");
     }catch(err){
       setError(err.response?.data?.errors || err.response?.data?.message || 'An error occurred during Signup');
+      toast.error("An error occurred during Signup")
     }finally{
       setLoading(false)
     }

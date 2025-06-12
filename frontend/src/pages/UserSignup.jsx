@@ -4,6 +4,7 @@ import { useContext, useState } from "react";
 import axios from 'axios'
 import { UserDataContext } from "../context/UserContext";
 const BASE_URL = import.meta.env.VITE_BASE_URL;
+import { toast } from 'react-toastify';
 
 const UserSignup = () => {
 
@@ -34,6 +35,7 @@ const UserSignup = () => {
       const data = response.data
       localStorage.setItem('userToken', data.token)
       setUser(data.user)
+      toast.success("User Created!")
 
       setFormData({
         fullname: {
@@ -48,6 +50,7 @@ const UserSignup = () => {
 
     }catch(err){
       setError(err.response?.data?.errors || err.response?.data?.message || 'An error occurred during Signup');
+      toast.error("An error occurred during Signup")
     }finally{
       setLoading(false)
     }

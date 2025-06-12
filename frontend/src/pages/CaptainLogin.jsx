@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import { CaptainDataContext } from '../context/CaptainContext'
+import { toast } from 'react-toastify'
 
 const Captainlogin = () => {
 
@@ -32,6 +33,7 @@ const Captainlogin = () => {
     const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/captain/login`, captain, {withCredentials: true})
     setCaptain(response.data.captain);
     localStorage.setItem('captainToken', response.data.token);
+    toast.success("Captain Logged in!")
     setEmail('')
     setPassword('')
     setLoading(false)
@@ -39,6 +41,7 @@ const Captainlogin = () => {
 
     }catch(err){
       console.log(err)
+      toast.error(err?.response?.data?.message)
       setError(err?.response?.data?.message)
     }finally{
       setLoading(false)
