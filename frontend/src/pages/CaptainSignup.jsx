@@ -1,14 +1,20 @@
 import { Link } from "react-router-dom";
+import React from 'react'
 import uberLogo from "../assets/uber_logo.png";
 import { useState } from "react";
 import axios from "axios";
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 import { useNavigate } from "react-router-dom";
+import { CaptainDataContext } from '../context/CaptainContext'
 
 const CaptainSignup = () => {
   const navigate = useNavigate();
+  const { setCaptain } = React.useContext(CaptainDataContext)
 
-  const [captain, setCaptain] = useState({
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
+
+  const [formData, setFormData] = useState({
     fullname: {
       firstname: "",
       lastname: "",
@@ -25,32 +31,44 @@ const CaptainSignup = () => {
 
   async function handleSubmit(e) {
     e.preventDefault();
-    const response = await axios.post(`${BASE_URL}/captain/register`, captain, {withCredentials: true});
-    if (response.status === 201) {
-      navigate("/captain-home");
-    }
+    setLoading(true)
+    setError(false)
 
-    setCaptain({
-      fullname: {
-        firstname: "",
-        lastname: "",
-      },
-      email: "",
-      password: "",
-      vehicle: {
-        color: "",
-        plate: "",
-        capacity: "",
-        type: "",
-      },
-    });
+    try{
+      const response = await axios.post(`${BASE_URL}/captain/register`, formData, {withCredentials: true});
+      setCaptain(response.data.captain)
+      localStorage.setItem('captainToken', response.data.token);
+
+      setFormData({
+        fullname: {
+          firstname: "",
+          lastname: "",
+        },
+        email: "",
+        password: "",
+        vehicle: {
+          color: "",
+          plate: "",
+          capacity: "",
+          type: "",
+        },
+      })
+      navigate("/captain-home");
+    }catch(err){
+      setError(err.response?.data?.errors || err.response?.data?.message || 'An error occurred during Signup');
+    }finally{
+      setLoading(false)
+    }
+    
+
+    
   }
 
   function handleCaptain(e) {
     const { name, value } = e.target;
 
     if (name === "firstname" || name === "lastname") {
-      setCaptain((prev) => ({
+      setFormData((prev) => ({
         ...prev,
         fullname: {
           ...prev.fullname,
@@ -63,7 +81,7 @@ const CaptainSignup = () => {
       name === "capacity" ||
       name === "type"
     ) {
-      setCaptain((prev) => ({
+      setFormData((prev) => ({
         ...prev,
         vehicle: {
           ...prev.vehicle,
@@ -71,7 +89,7 @@ const CaptainSignup = () => {
         },
       }));
     } else {
-      setCaptain((prev) => ({ ...prev, [name]: value }));
+      setFormData((prev) => ({ ...prev, [name]: value }));
     }
   }
 
@@ -85,7 +103,7 @@ const CaptainSignup = () => {
             <input
               type="text"
               placeholder="First Name"
-              value={captain.fullname.firstname}
+              value={formData.fullname.firstname}
               name="firstname"
               onChange={handleCaptain}
               className="border border-gray-300 bg-gray-200 mt-2 mb-4 p-2 rounded w-full text-lg"
@@ -94,7 +112,7 @@ const CaptainSignup = () => {
             <input
               type="text"
               placeholder="Last Name"
-              value={captain.fullname.lastname}
+              value={formData.fullname.lastname}
               name="lastname"
               onChange={handleCaptain}
               className="border border-gray-300 bg-gray-200 mt-2 mb-4 p-2 rounded w-full text-lg"
@@ -107,7 +125,7 @@ const CaptainSignup = () => {
           <input
             type="email"
             placeholder="xyz@gmail.com"
-            value={captain.email}
+            value={formData.email}
             name="email"
             onChange={handleCaptain}
             className="border border-gray-300 bg-gray-200 mt-2 mb-4 p-2 rounded w-full text-lg"
@@ -117,7 +135,7 @@ const CaptainSignup = () => {
           <input
             type="password"
             placeholder="password"
-            value={captain.password}
+            value={formData.password}
             name="password"
             onChange={handleCaptain}
             className="border border-gray-300 bg-gray-200 mt-2 mb-4 p-2 rounded w-full text-lg"
@@ -129,7 +147,7 @@ const CaptainSignup = () => {
             <input
               type="text"
               placeholder="Vehicle color"
-              value={captain.vehicle.color}
+              value={formData.vehicle.color}
               name="color"
               onChange={handleCaptain}
               className="border border-gray-300 bg-gray-200 mt-2 mb-4 p-2 w-1/2 rounded text-lg"
@@ -138,7 +156,7 @@ const CaptainSignup = () => {
             <input
               type="text"
               placeholder="Plate number"
-              value={captain.vehicle.plate}
+              value={formData.vehicle.plate}
               name="plate"
               onChange={handleCaptain}
               className="border border-gray-300 bg-gray-200 mt-2 mb-4 p-2 w-1/2 rounded text-lg"
@@ -147,7 +165,7 @@ const CaptainSignup = () => {
             <input
               type="number"
               placeholder="Vehicle Capacity"
-              value={captain.vehicle.capacity}
+              value={formData.vehicle.capacity}
               name="capacity"
               onChange={handleCaptain}
               className="border border-gray-300 bg-gray-200 mt-2 mb-4 p-2 w-1/2 rounded text-lg"
@@ -155,23 +173,26 @@ const CaptainSignup = () => {
             />
             <select
               name="type"
-              value={captain.vehicle.type}
+              value={formData.vehicle.type}
               onChange={handleCaptain}
               required
               className="border border-gray-300 bg-gray-200 mt-2 mb-4 p-2 w-1/2 rounded text-lg"
             >
-              <option disabled>-Vehicle Type-</option>
+              <option value="" disabled>-Vehicle Type-</option>
               <option value="car">car</option>
               <option value="auto">auto</option>
               <option value="motorcycle">motorcycle</option>
             </select>
           </div>
 
+          {Array.isArray(error) && error.map(er => <p className="text-red-500 text-sm mb-4">{er.msg}</p>)}
+          { typeof error === 'string' && <p className="text-red-500 text-sm mb-4">{error}</p>}
+
           <button
             type="submit"
             className="text-center text-xl w-full bg-black text-white py-3 rounded mt-4"
           >
-            Create Captain Account
+            {loading ? "Creating Account.." : "Create Captain Account"}
           </button>
         </form>
         <div className="text-center mt-4">

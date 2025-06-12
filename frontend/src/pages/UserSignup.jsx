@@ -1,14 +1,19 @@
 import { Link, useNavigate } from "react-router-dom";
 import uberLogo from "../assets/uber_logo.png";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import axios from 'axios'
+import { UserDataContext } from "../context/UserContext";
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 
 const UserSignup = () => {
 
   const navigate = useNavigate()
 
-  const [user, setUser] = useState({
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
+
+
+  const [formData, setFormData] = useState({
     fullname: {
       firstname: '',
       lastname: ''
@@ -17,30 +22,41 @@ const UserSignup = () => {
     password: ''
   })
 
-  async function handleSubmit(e){
-    e.preventDefault()
-    
-    const response = await axios.post(`${BASE_URL}/user/register`, user,
-      {withCredentials: true}
-    );
-    if(response.status === 201){
-      navigate('/home')
-    }
+  const { setUser } = useContext(UserDataContext)
 
-    setUser({
-    fullname: {
-      firstname: '',
-      lastname: ''
-    },
-    email: '',
-    password: ''
-    })
+  async function handleSubmit(e){
+    e.preventDefault();
+    setLoading(true)
+    setError(false)
+
+    try{
+      const response = await axios.post(`${BASE_URL}/user/register`, formData,{withCredentials: true})
+      const data = response.data
+      localStorage.setItem('userToken', data.token)
+      setUser(data.user)
+
+      setFormData({
+        fullname: {
+          firstname: '',
+          lastname: ''
+        },
+        email: '',
+        password: ''
+      })  
+
+      navigate('/home')
+
+    }catch(err){
+      setError(err.response?.data?.errors || err.response?.data?.message || 'An error occurred during Signup');
+    }finally{
+      setLoading(false)
+    }
   }
 
   function handleUser(e){
     const {name, value} = e.target
     if(name === "firstname" || name === "lastname") {
-      setUser(prev => ({
+      setFormData(prev => ({
         ...prev,
         fullname: {
           ...prev.fullname,
@@ -48,7 +64,7 @@ const UserSignup = () => {
         }
       }))
     }else{
-      setUser(prev => ({...prev, [name]: value}))
+      setFormData(prev => ({...prev, [name]: value}))
     }
   }
 
@@ -61,7 +77,7 @@ const UserSignup = () => {
             <input
             type="text"
             placeholder="First Name"
-            value={user.fullname.firstname}
+            value={formData.fullname.firstname}
             name="firstname"
             onChange={handleUser}
             className="border border-gray-300 bg-gray-200 mt-2 mb-4 p-2 rounded w-full text-lg"
@@ -70,7 +86,7 @@ const UserSignup = () => {
             <input
               type="text"
               placeholder="Last Name"
-              value={user.fullname.lastname}
+              value={formData.fullname.lastname}
               name="lastname"
               onChange={handleUser}
               className="border border-gray-300 bg-gray-200 mt-2 mb-4 p-2 rounded w-full text-lg"
@@ -82,7 +98,7 @@ const UserSignup = () => {
           <input
             type="email"
             placeholder="xyz@gmail.com"
-            value={user.email}
+            value={formData.email}
             name="email"
             onChange={handleUser}
             className="border border-gray-300 bg-gray-200 mt-2 mb-4 p-2 rounded w-full text-lg"
@@ -92,14 +108,18 @@ const UserSignup = () => {
           <input
             type="password"
             placeholder="password"
-            value={user.password}
+            value={formData.password}
             name="password"
             onChange={handleUser}
             className="border border-gray-300 bg-gray-200 mt-2 mb-4 p-2 rounded w-full text-lg"
             required
           />
-          <button type="submit" className="text-center text-xl w-full bg-black text-white py-3 rounded mt-4">
-            Create Account
+
+          {Array.isArray(error) && error.map(er => <p className="text-red-500 text-sm mb-4">{er.msg}</p>)}
+          { typeof error === 'string' && <p className="text-red-500 text-sm mb-4">{error}</p>}
+
+          <button type="submit" disabled={loading} className="text-center text-xl w-full bg-black text-white py-3 rounded mt-4">
+            {loading ? "Creating Account" : "Sign up"}
           </button>
         </form>
         <div className="text-center mt-4">

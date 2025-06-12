@@ -15,6 +15,9 @@ import { UserDataContext } from '../context/UserContext.jsx';
 import LiveTracking from '../components/LiveTracking.jsx'
 
 const Home = () => {
+
+  const [error, setError] = useState(null)
+
   const [pickup, setPickup] = useState("");
   const [destination, setDestination] = useState("");
   const [pickupSuggestions, setPickupSuggestions ] = useState([])
@@ -64,15 +67,15 @@ const Home = () => {
 
 
   async function findTrip(){
+    if(!pickup || !destination){
+      return setError("Both fields are required")
+    }
     setvehiclePanel(true)
     setTripPanel(false)
 
     const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/ride/get-fare`, {
       params: { pickup, destination },
       
-      // headers: {
-      //     Authorization: `Bearer ${localStorage.getItem('token')}`
-      // }
     })
 
     setFare(response.data)
@@ -119,7 +122,7 @@ const Home = () => {
   useGSAP(() => {
     if (tripPanel) {
       gsap.to(panelRef.current, {
-        height: "100%",
+        height: "80%",
       });
       gsap.to(panelCloseRef.current, {
         opacity: 1,
@@ -235,6 +238,7 @@ const Home = () => {
               onClick={() => {
                 setTripPanel(true)
                 setActiveField('pickup')
+                setError('')
               }}
 
               onChange={(e) => {
@@ -259,6 +263,9 @@ const Home = () => {
               placeholder="Add destination"
             />
           </form>
+
+          {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
+
           <button
             onClick={findTrip}
             className='bg-black text-white px-4 py-2 rounded-lg mt-3 w-full'>

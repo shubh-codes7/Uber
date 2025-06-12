@@ -9,28 +9,41 @@ const Captainlogin = () => {
   const [ email, setEmail ] = useState('')
   const [ password, setPassword ] = useState('')
 
-  const { captain, setCaptain } = React.useContext(CaptainDataContext)
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState(null)
+
+  const { setCaptain } = React.useContext(CaptainDataContext)
   const navigate = useNavigate()
 
 
 
   const submitHandler = async (e) => {
     e.preventDefault();
+    setLoading(true)
+    setError(false)
+
+    try{
+
     const captain = {
       email: email,
       password
     }
 
     const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/captain/login`, captain, {withCredentials: true})
-
-    if (response.status === 200) {
-      setCaptain(response.data.captain);
-      navigate('/captain-home')
-
-    }
-
+    setCaptain(response.data.captain);
+    localStorage.setItem('captainToken', response.data.token);
     setEmail('')
     setPassword('')
+    setLoading(false)
+    navigate('/captain-home')
+
+    }catch(err){
+      console.log(err)
+      setError(err?.response?.data?.message)
+    }finally{
+      setLoading(false)
+    }
+
   }
   return (
     <div className='p-7 h-svh flex flex-col justify-between'>
@@ -64,9 +77,9 @@ const Captainlogin = () => {
             placeholder='password'
           />
 
-          <button
-            className='bg-[#111] text-white font-semibold mb-3 rounded-lg px-4 py-2 w-full text-lg placeholder:text-base'
-          >Login</button>
+          {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
+          
+          <button disabled={loading} className='bg-[#111] text-white font-semibold mb-3 rounded-lg px-4 py-2 w-full text-lg placeholder:text-base'>{loading ? "Logging in" : "Login"}</button>
 
         </form>
         <p className='text-center'>Join a fleet? <Link to='/captain-signup' className='text-blue-600'>Register as a Captain</Link></p>

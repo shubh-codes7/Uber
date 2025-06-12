@@ -7,9 +7,13 @@ import { useContext } from "react";
 // const BASE_URL = import.meta.env.VITE_BASE_URL;
 
 const UserLogin = () => {
-const [ email, setEmail ] = useState('')
+  const [ email, setEmail ] = useState('')
   const [ password, setPassword ] = useState('')
   const [ userData, setUserData ] = useState({})
+
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState(null)
+
 
   const { user, setUser } = useContext(UserDataContext)
   const navigate = useNavigate()
@@ -18,24 +22,28 @@ const [ email, setEmail ] = useState('')
 
   const submitHandler = async (e) => {
     e.preventDefault();
+    setLoading(true)
+    setError(false)
 
-    const userData = {
-      email: email,
-      password: password
-    }
+    try{
 
-    const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/user/login`, userData, {withCredentials: true})
+      const userData = {
+        email: email,
+        password: password
+      }
 
-    if (response.status === 200) {
-      const data = response.data
-      setUser(data.user)
-      localStorage.setItem('userToken', data.token)
+      const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/user/login`, userData, {withCredentials: true})
+      setUser(response.data.user)
+      localStorage.setItem('userToken', response.data.token)
+      setEmail('')
+      setPassword('')
       navigate('/home')
+    }catch(err){
+      setError(err?.response?.data?.message)
+    }finally{
+      setLoading(false)
     }
-
-
-    setEmail('')
-    setPassword('')
+   
   }
 
 
@@ -68,8 +76,9 @@ const [ email, setEmail ] = useState('')
             className="border border-gray-300 bg-gray-200 mt-2 mb-4 p-2 rounded w-full text-lg"
             required
           />
-          <button type="submit" className="text-center text-xl w-full bg-black text-white py-3 rounded mt-4">
-            Login
+          {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
+          <button type="submit" disabled={loading} style={{backgroundColor: loading ? "gray" : "black"}} className="text-center text-xl w-full bg-black text-white py-3 rounded mt-4">
+            {loading ? "Logging in" : "Login"}
           </button>
         </form>
         <div className="text-center mt-4">

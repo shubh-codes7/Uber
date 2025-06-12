@@ -39,7 +39,7 @@ export async function registerCaptain (req, res) {
       maxAge: 24 * 60 * 60 * 1000 // 24 hours
     })
 
-    return res.status(201).json({ captain })
+    return res.status(201).json({ captain, token })
   } catch (error) {
     return res.status(500).json({ message: error.message })
   }
