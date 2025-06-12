@@ -32,12 +32,25 @@ export async function createRide(req, res){
     const rideWithUser = await Ride.findOne({_id: ride._id}).populate('user')
 
 
-    captainsInRadius.map(captain => {
-      sendMessageToSocketId(captain.socketId, {
-        event: 'new-ride',
-        data: rideWithUser
-      })
-    })
+    // captainsInRadius.map(captain => {
+    //   sendMessageToSocketId(captain.socketId, {
+    //     event: 'new-ride',
+    //     data: rideWithUser
+    //   })
+    // })
+
+    // Use Set to store unique socket IDs
+    const uniqueSocketIds = new Set(captainsInRadius.map(captain => captain.socketId));
+
+    // Emit event only to unique socket IDs
+    Array.from(uniqueSocketIds).forEach(socketId => {
+      if (socketId) {  // Check if socketId exists
+        sendMessageToSocketId(socketId, {
+          event: 'new-ride',
+          data: rideWithUser
+        });
+      }
+    });
 
   }catch(error){
     console.log(error)

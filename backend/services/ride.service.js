@@ -111,8 +111,6 @@ export async function confirmRideService({ rideId, captain }) {
   return ride;
 }
 
-
-
 export async function startRideService({ rideId, otp, captain }) {
   if (!rideId || !otp) {
     throw new Error("Ride id and OTP are required");

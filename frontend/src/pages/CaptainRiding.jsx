@@ -1,10 +1,13 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import uberlogo from "../assets/uber_logo.png";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
 import FinishRide from "../components/FinishRide";
 import LiveTracking from "../components/LiveTracking";
+import { useContext } from "react";
+import { SocketContext } from "../context/SocketContext.jsx";
+import { toast } from "react-toastify";
 
 export default function CaptainRiding() {
 
@@ -13,6 +16,9 @@ export default function CaptainRiding() {
 
   const location = useLocation()
   const rideData = location.state?.ride
+
+  const { socket } = useContext(SocketContext)
+  const navigate = useNavigate();
 
   useGSAP(function () {
         if (finishRidePanel) {
@@ -24,7 +30,22 @@ export default function CaptainRiding() {
                 transform: 'translateY(100%)'
             })
         }
-    }, [ finishRidePanel ])
+  }, [ finishRidePanel ])
+
+
+  useEffect(() => {
+    // Add socket event listener
+    socket.on("payment-completed", (data) => {
+      toast.success("Payment received")
+      navigate('/captain-home')
+      console.log(data)
+    })
+
+    // Cleanup listener when component unmounts
+    return () => {
+      socket.off("payment-completed")
+    }
+  }, [socket, navigate]) 
 
 
   return (
