@@ -19,6 +19,7 @@ export const createOrder = async (req, res) => {
     };
 
     const order = await razorpay.orders.create(options);
+    console.log(order);
 
     if (!order) {
       throw new Error("Could not create order");
