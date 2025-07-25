@@ -9,7 +9,7 @@ import Payment from "../components/Razorpay";
 const Riding = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const ride = location?.state?.ride;
+  const ride = location.state?.ride;
   const { socket } = useContext(SocketContext);
 
   socket.on("ride-ended", () => {

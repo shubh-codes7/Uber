@@ -75,8 +75,7 @@ const Home = () => {
     setTripPanel(false)
 
     const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/ride/get-fare`, {
-      params: { pickup, destination },
-      
+      params: { pickup, destination }
     })
 
     setFare(response.data)

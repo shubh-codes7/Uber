@@ -10,7 +10,6 @@ import { SocketContext } from "../context/SocketContext";
 import { CaptainDataContext } from "../context/CaptainContext";
 import ConfirmRidePopup from "../components/ConfirmRidePopup";
 import LiveTracking from "../components/LiveTracking";
-import { toast } from "react-toastify";
 
 export default function CaptainHome() {
   const { socket } = useContext(SocketContext);
@@ -24,39 +23,6 @@ export default function CaptainHome() {
 
   const [ride, setRide] = useState(null);
 
-  // useEffect(() => {
-  //   socket.emit("join", {
-  //     userId: captain._id,
-  //     userType: "captain",
-  //   });
-  //   const updateLocation = () => {
-  //     if (navigator.geolocation) {
-  //       navigator.geolocation.getCurrentPosition((position) => {
-
-  //         socket.emit("update-location-captain", {
-  //           userId: captain._id,
-  //           location: {
-  //             ltd: position.coords.latitude,
-  //             lng: position.coords.longitude,
-  //           },
-  //         });
-  //       });
-  //     }
-  //   };
-
-  //   const locationInterval = setInterval(updateLocation, 10000);
-  //   updateLocation();
-
-  //   // return () => clearInterval(locationInterval)
-  // }, []);
-
-
-  // socket.on("new-ride", (data) => {
-  //   console.log("new ride", data);
-  //   toast.success("New ride request")
-  //   setRide(data);
-  //   setRidePopupPanel(true);
-  // });
 
   useEffect(() => {
   socket.emit("join", {
